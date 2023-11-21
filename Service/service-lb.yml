@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment-lb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp-s1-lb
+  template:
+    metadata:
+      labels:
+        app: myapp-s1-lb
+    spec:
+      containers:
+        - name: mycontainer-s1-lb
+          image: nginx:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-s1-lb
+  labels:
+    run: myapp-s1-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: myapp-s1-lb
+  ports:
+    - port: 80
+      protocol: TCP
